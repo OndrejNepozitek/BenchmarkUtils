@@ -9,7 +9,7 @@
 
 	public class BenchmarkJob : IPreviewableBenchmarkJob<BenchmarkResult>
 	{
-		public event Action<BenchmarkResult, int, int> OnPreview;
+		public event Action<BenchmarkResult> OnPreview;
 		private readonly int benchmarksCount;
 		private readonly int randomWalksCount;
 
@@ -66,7 +66,7 @@
 					ErrorMin = minError,
 					ErrorMedian = errors.GetMedian(),
 					SimulationTime = (times.Average() / 1000),
-				}, i, benchmarksCount);
+				});
 			}
 
 			return new BenchmarkResult()

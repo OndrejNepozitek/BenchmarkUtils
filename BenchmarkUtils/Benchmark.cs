@@ -6,15 +6,42 @@
 	using Enums;
 	using FileMode = Enums.FileMode;
 
-	public class Benchmark<TResult, TJob>
+	/// <summary>
+	/// Class for running benchmarks.
+	/// </summary>
+	/// <typeparam name="TJob">Type of the job to be benchmarked.</typeparam>
+	/// <typeparam name="TResult">Type of the result returned by the job.</typeparam>
+	public class Benchmark<TJob, TResult>
 		where TJob : IBenchmarkJob<TResult>
 	{
-		protected BenchmarkFormatter<TResult> BenchmarkFormatter = new BenchmarkFormatter<TResult>();
+		protected BenchmarkTableOutput<TResult> BenchmarkTableOutput = new BenchmarkTableOutput<TResult>();
 
-		private bool withConsole = true;
-		private readonly List<FileOutput> fileOutputs = new List<FileOutput>();
-		private TextWriter[] textWritersArray;
+		protected bool WithConsole;
+		protected readonly List<FileOutput> FileOutputs = new List<FileOutput>();
+		protected TextWriter[] TextWritersArray;
 
+		/// <summary>
+		/// </summary>
+		/// <param name="enableConsoleOutput">Whether console output should be enabled.</param>
+		public Benchmark(bool enableConsoleOutput = true)
+		{
+			WithConsole = enableConsoleOutput;
+		}
+
+		/// <summary>
+		/// Adds file output to the benchmark.
+		/// </summary>
+		/// <remarks>
+		/// Multiple file outputs can be added.
+		/// 
+		/// filename must be supplied when namingConvention == FixedName.
+		/// customFilenameFunc must be supplied when namingConvention == Custom.
+		/// </remarks>
+		/// <param name="folder">Folder to store benchmarks.</param>
+		/// <param name="fileMode">Whether data should be appended or overwritten.</param>
+		/// <param name="namingConvention">Naming convention of output files.</param>
+		/// <param name="filename">Name of the file. </param>
+		/// <param name="customFilenameFunc">Function that returns the name for an output file.</param>
 		public void AddFileOutput(string folder = "Benchmarks/", FileMode fileMode = FileMode.Append, NamingConvention namingConvention = NamingConvention.Timestamp, string filename = null, Func<string> customFilenameFunc = null)
 		{
 			Func<string> filenameFunc;
@@ -42,36 +69,51 @@
 			}
 
 			var fileOutput = new FileOutput(folder, fileMode, filenameFunc);
-			fileOutputs.Add(fileOutput);
+			FileOutputs.Add(fileOutput);
 		}
 
-		protected void BenchmarkStarted()
+		/// <summary>
+		/// Enables or disables console output.
+		/// </summary>
+		/// <param name="enable"></param>
+		public void SetConsoleOutput(bool enable)
 		{
-			if (withConsole)
+			WithConsole = enable;
+		}
+
+		/// <summary>
+		/// Called before a benchmark starts. Setups the benchmark.
+		/// </summary>
+		protected virtual void BenchmarkStarted(string name)
+		{
+			if (WithConsole)
 			{
-				textWritersArray = new TextWriter[fileOutputs.Count + 1];
-				textWritersArray[fileOutputs.Count] = Console.Out;
+				TextWritersArray = new TextWriter[FileOutputs.Count + 1];
+				TextWritersArray[FileOutputs.Count] = Console.Out;
 			}
 			else
 			{
-				textWritersArray = new TextWriter[fileOutputs.Count];
+				TextWritersArray = new TextWriter[FileOutputs.Count];
 			}
 
-			for (var i = 0; i < fileOutputs.Count; i++)
+			for (var i = 0; i < FileOutputs.Count; i++)
 			{
-				var fileOutput = fileOutputs[i];
+				var fileOutput = FileOutputs[i];
 				Directory.CreateDirectory(fileOutput.Folder);
 				var path = $"{fileOutput.Folder}{fileOutput.FilenameFunc()}";
 				var writer = new StreamWriter(path, fileOutput.FileMode == FileMode.Append);
-				textWritersArray[i] = writer;
+				TextWritersArray[i] = writer;
 			}
 
-			BenchmarkFormatter.PrintHeader(textWritersArray);
+			BenchmarkTableOutput.PrintHeader(name, TextWritersArray);
 		}
 
-		protected void BenchmarkEnded()
+		/// <summary>
+		/// Called after a benchmark ends. Cleanup after the benchmark.
+		/// </summary>
+		protected virtual void BenchmarkEnded()
 		{
-			foreach (var writer in textWritersArray)
+			foreach (var writer in TextWritersArray)
 			{
 				if (writer == Console.Out)
 					continue;
@@ -80,9 +122,14 @@
 			}
 		}
 
-		public virtual void Run(string name, params TJob[] jobs)
+		/// <summary>
+		/// Executes a benchmark of given jobs with a given name.
+		/// </summary>
+		/// <param name="jobs">Jobs to be benchmarked.</param>
+		/// <param name="name">Optional name of the benchmark.</param>
+		public virtual void Run(TJob[] jobs, string name = null)
 		{
-			BenchmarkStarted();
+			BenchmarkStarted(name);
 
 			foreach (var job in jobs)
 			{
@@ -92,24 +139,28 @@
 			BenchmarkEnded();
 		}
 
+		/// <summary>
+		/// Benchmarks a given job.
+		/// </summary>
+		/// <param name="job"></param>
 		protected virtual void Run(TJob job)
 		{
 			if (job is IPreviewableBenchmarkJob<TResult> previewableJob)
 			{
-				previewableJob.OnPreview += (previewResult, count, totalCount) => BenchmarkFormatter.PreviewRow(previewResult);
+				previewableJob.OnPreview += (previewResult) => BenchmarkTableOutput.PreviewRow(previewResult);
 			}
 
 			var result = job.Execute();
 
-			BenchmarkFormatter.PrintRow(result, textWritersArray);
+			BenchmarkTableOutput.PrintRow(result, TextWritersArray);
 
-			foreach (var textWriter in textWritersArray)
+			foreach (var textWriter in TextWritersArray)
 			{
 				textWriter.Flush();
 			}
 		}
 
-		private class FileOutput
+		protected class FileOutput
 		{
 			public string Folder { get; }
 

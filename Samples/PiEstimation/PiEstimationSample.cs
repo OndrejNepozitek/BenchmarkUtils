@@ -7,7 +7,7 @@
 	{
 		public static void Run()
 		{
-			var benchmark = new Benchmark<BenchmarkResult, BenchmarkJob>();
+			var benchmark = new Benchmark<BenchmarkJob, BenchmarkResult>();
 			benchmark.AddFileOutput();
 
 			const int benchmarksCount = 10;
@@ -24,7 +24,7 @@
 				new BenchmarkJob(benchmarksCount, 500000000),
 			};
 
-			benchmark.Run("PI estimation", jobs.ToArray());
+			benchmark.Run(jobs.ToArray(), "PI estimation");
 		}
 	}
 }
