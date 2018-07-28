@@ -2,11 +2,27 @@
 
 A simple .NET utility to benchmark the performance of (often stochastic) algorithms. The typical usage is to benchmark various configurations of a stochastic algorithm and compare how they perform both result-wise and speed-wise. **It is not meant to perform microbenchmarks.** 
 
+## Example output
+
+```
+ << Monte Carlo PI estimation >>
+---------------------------------------------------------------------------------------------------------------
+ Name                    | Best estimation   | Error min              | Error median           | Avg time     |
+---------------------------------------------------------------------------------------------------------------
+ 50 samples                3.12                0.021592653589793        0.138407346410207        0.0000 s     
+ 500 samples               3.144               0.00240734641020701      0.026407346410207        0.0000 s     
+ 5000 samples              3.1424              0.000807346410206744     0.025592653589793        0.0004 s     
+ 50000 samples             3.14128             0.000312653589793044     0.00583265358979324      0.0099 s     
+ 500000 samples            3.141936            0.000343346410206724     0.00175265358979315      0.0702 s     
+ 5000000 samples           3.1415536           3.90535897931699E-05     0.000681746410206685     0.6490 s     
+```
+
 ## Features
 
 - Easily specify what columns should be included in the results table
 - Output results to the console and/or save to a file
 - Show intermediate results as the benchmark runs
+- .NET Standard 2.0 dll
 
 #### Column style features
 - Name
@@ -14,6 +30,10 @@ A simple .NET utility to benchmark the performance of (often stochastic) algorit
 - Format of values
 - Order
 - Whether to show the column in console/file/everywhere
+
+## How to install
+- include the BenchmarkUtils.dll (.NET Standard 2.0 dll) to your project
+- use the `BenchmarkUtils` namespace
 
 ## Example setup - PI estimation
 We will demonstrate how to use the library on a simple example of a [monte carlo algorithm that estimates the value of pi](https://www.geeksforgeeks.org/estimating-value-pi-using-monte-carlo/). The goal is to compare how the error of the estimation depends on the number of sampled points. Because the algorithm is stochastic, we will run the benchmark ten times for each configuration (i.e. number of samples) and compute the median of errors.
