@@ -19,6 +19,10 @@
 	{
 		private readonly List<Column> columns = new List<Column>();
 
+		private int defaultLength;
+		private string defaultFormat;
+		private ShowIn defaultShow;
+
 		public BenchmarkTableOutput()
 		{
 			PrepareColumns();
@@ -50,6 +54,10 @@
 			// Sort properties by their order
 			propertiesWithOrder.Sort((p1, p2) => p1.Item2.CompareTo(p2.Item2));
 
+			defaultLength = typeof(TResult).GetCustomAttribute<LengthAttribute>()?.Length ?? 20;
+			defaultFormat = typeof(TResult).GetCustomAttribute<ValueFormatAttribute>()?.Format;
+			defaultShow = typeof(TResult).GetCustomAttribute<ShowAttribute>()?.Type ?? ShowIn.All;
+
 			// Use reflection to call the CreateColumn generic method.
 			// This is done to get into a strongly-typed context and make the code simpler.
 			var createColumnMethod = GetType().GetMethod(nameof(CreateColumn), BindingFlags.NonPublic | BindingFlags.Instance);
@@ -76,9 +84,9 @@
 		/// <returns></returns>
 		private Column CreateColumn<TReturn>(PropertyInfo property)
 		{
-			var length = property.GetCustomAttribute<LengthAttribute>()?.Length ?? 20;
-			var format = property.GetCustomAttribute<ValueFormatAttribute>()?.Format;
-			var hideIn = property.GetCustomAttribute<ShowAttribute>()?.Type ?? ShowIn.All;
+			var length = property.GetCustomAttribute<LengthAttribute>()?.Length ?? defaultLength;
+			var format = property.GetCustomAttribute<ValueFormatAttribute>()?.Format ?? defaultFormat;
+			var hideIn = property.GetCustomAttribute<ShowAttribute>()?.Type ?? defaultShow;
 
 			// Prepare the getter of the property
 			var getterInfo = property.GetGetMethod();

@@ -9,7 +9,7 @@
 	/// The format string is later used as follows: string.Format(formatString, value);
 	/// See the docs - https://msdn.microsoft.com/en-us/library/system.string.format(v=vs.110).aspx
 	/// </remarks>
-	[AttributeUsage(AttributeTargets.Property)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
 	public class ValueFormatAttribute : Attribute
 	{
 		/// <summary>

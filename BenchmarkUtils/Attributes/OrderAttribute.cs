@@ -5,7 +5,7 @@
 	/// <summary>
 	/// Specifies the order of the column as seen in the results table.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Property)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
 	public class OrderAttribute : Attribute
 	{
 		/// <summary>

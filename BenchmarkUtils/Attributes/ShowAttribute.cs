@@ -6,7 +6,7 @@
 	/// <summary>
 	/// Specifies where should be the column shown.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Property)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
 	public class ShowAttribute : Attribute
 	{
 		/// <summary>

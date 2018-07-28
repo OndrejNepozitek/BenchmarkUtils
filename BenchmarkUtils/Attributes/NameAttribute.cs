@@ -5,7 +5,7 @@
 	/// <summary>
 	/// Specifies the column name that will be displayed in the header of the result table.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Property)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
 	public class NameAttribute : Attribute
 	{
 		/// <summary>

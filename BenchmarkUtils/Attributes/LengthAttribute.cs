@@ -5,7 +5,7 @@
 	/// <summary>
 	/// Sets the length of a corresponding column.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Property)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
 	public class LengthAttribute : Attribute
 	{
 		/// <summary>
