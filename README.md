@@ -5,7 +5,7 @@ A simple .NET utility to benchmark the performance of (often stochastic) algorit
 ## Example output
 
 ```
- << Monte Carlo PI estimation >>
+ << Monte Carlo PI estimation, 10 runs for each configuration >>
 ---------------------------------------------------------------------------------------------------------------
  Name                    | Best estimation   | Error min              | Error median           | Avg time     |
 ---------------------------------------------------------------------------------------------------------------
@@ -167,3 +167,6 @@ And the result will look like this:
  50000000 samples          3.14158032          1.23335897930232E-05     0.00025793358979298      6.1894 s     
  500000000 samples         3.14160888          1.62264102070431E-05     3.2266410206816E-05      57.9247 s    
 ```
+
+## API reference
+WIP
