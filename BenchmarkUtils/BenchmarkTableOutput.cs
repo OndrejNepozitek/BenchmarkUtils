@@ -144,6 +144,7 @@
 		/// <param name="writers"></param>
 		public void PrintRow(TResult result, params TextWriter[] writers)
 		{
+			var first = true;
 			foreach (var column in columns)
 			{
 				var valueObj = column.GetterFunc(result);
@@ -154,8 +155,21 @@
 					if (!ShouldShow(column, writer))
 						continue;
 
-					writer.Write("  ");
-					writer.Write(value.PadRight(column.Width - 2, ' '));
+					if (first)
+					{
+						writer.Write(" ");
+						writer.Write(value.PadRight(column.Width - 1, ' '));
+					}
+					else
+					{
+						writer.Write("  ");
+						writer.Write(value.PadRight(column.Width - 2, ' '));
+					}
+				}
+
+				if (first)
+				{
+					first = false;
 				}
 			}
 

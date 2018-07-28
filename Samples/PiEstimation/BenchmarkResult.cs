@@ -11,14 +11,13 @@
 		public string Name { get; set; }
 
 		[Order(2)]
-		[Length(25)]
+		[Length(20)]
 		[Name("Best estimation")]
 		public double BestEstimation { get; set; }
 
 		[Order(3)]
 		[Length(25)]
 		[Name("Error min")]
-		[Show(ShowIn.File)]
 		public double ErrorMin { get; set; }
 
 		[Order(4)]
@@ -30,6 +29,6 @@
 		[Length(15)]
 		[Name("Avg time")]
 		[ValueFormat("{0:N4} s")]
-		public double SimulationTime { get; set; }
+		public double AverageTime { get; set; }
 	}
 }

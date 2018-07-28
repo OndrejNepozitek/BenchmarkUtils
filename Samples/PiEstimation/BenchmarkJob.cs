@@ -11,12 +11,12 @@
 	{
 		public event Action<BenchmarkResult> OnPreview;
 		private readonly int benchmarksCount;
-		private readonly int randomWalksCount;
+		private readonly int samplesCount;
 
-		public BenchmarkJob(int benchmarksCount, int randomWalksCount)
+		public BenchmarkJob(int benchmarksCount, int samplesCount)
 		{
 			this.benchmarksCount = benchmarksCount;
-			this.randomWalksCount = randomWalksCount;
+			this.samplesCount = samplesCount;
 		}
 
 		public BenchmarkResult Execute()
@@ -35,7 +35,7 @@
 				timer.Restart();
 				var insideCount = 0;
 
-				for (var j = 0; j < randomWalksCount; j++)
+				for (var j = 0; j < samplesCount; j++)
 				{
 					var sampleX = random.NextDouble();
 					var sampleY = random.NextDouble();
@@ -49,7 +49,7 @@
 
 				times.Add(timer.ElapsedMilliseconds);
 
-				var estimation = 4 * (insideCount / (double) randomWalksCount);
+				var estimation = 4 * (insideCount / (double) samplesCount);
 				var error = Math.Abs(Math.PI - estimation);
 				errors.Add(error);
 
@@ -65,17 +65,17 @@
 					BestEstimation = bestEstimation,
 					ErrorMin = minError,
 					ErrorMedian = errors.GetMedian(),
-					SimulationTime = (times.Average() / 1000),
+					AverageTime = (times.Average() / 1000),
 				});
 			}
 
 			return new BenchmarkResult()
 			{
-				Name = $"{randomWalksCount} walks",
+				Name = $"{samplesCount} samples",
 				BestEstimation = bestEstimation,
 				ErrorMin = minError,
 				ErrorMedian = errors.GetMedian(),
-				SimulationTime = (times.Average() / 1000),
+				AverageTime = (times.Average() / 1000),
 			};
 		}
 	}

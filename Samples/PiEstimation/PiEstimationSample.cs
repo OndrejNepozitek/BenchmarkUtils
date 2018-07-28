@@ -11,8 +11,8 @@
 			benchmark.AddFileOutput();
 
 			const int benchmarksCount = 10;
-
-			var jobs = new List<BenchmarkJob>
+		
+			var jobs = new BenchmarkJob[]
 			{
 				new BenchmarkJob(benchmarksCount, 50),
 				new BenchmarkJob(benchmarksCount, 500),
@@ -24,7 +24,7 @@
 				new BenchmarkJob(benchmarksCount, 500000000),
 			};
 
-			benchmark.Run(jobs.ToArray(), "PI estimation");
+			benchmark.Run(jobs, "PI estimation");
 		}
 	}
 }
