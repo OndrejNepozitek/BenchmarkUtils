@@ -2,6 +2,14 @@
 
 A simple .NET utility to benchmark the performance of (often stochastic) algorithms. The typical usage is to benchmark various configurations of a stochastic algorithm and compare how they perform both result-wise and speed-wise. **It is not meant to perform microbenchmarks.** 
 
+
+## Table of contents
+- [Example output](#example-output)
+- [Features](#features)
+- [How to install](#how-to-install)
+- [Example setup - PI estimation](#example-setup---pi-estimation)
+- [API reference](#api-reference)
+
 ## Example output
 
 ```
@@ -63,7 +71,7 @@ public class BenchmarkResult
 }
 ```
 
-To specifiy how should the table with results look like, we use attributes to annonate individual properties of the class. Each such property will correspond to a single column in the table. For a detailed describtion, see the API reference section. After adding attributes to the properties, our class may now look like this:
+To specifiy how should the table with results look like, we use attributes to annonate individual properties of the class. Each such property will correspond to a single column in the table. For a detailed describtion, see the [API reference](#api-reference) section. After adding attributes to the properties, our class may now look like this:
 
 ```csharp
 public class BenchmarkResult
@@ -169,4 +177,94 @@ And the result will look like this:
 ```
 
 ## API reference
-WIP
+
+### `Benchmark` class
+Documentation comments are present in the [code](https://github.com/OndrejNepozitek/BenchmarkUtils/blob/master/BenchmarkUtils/Benchmark.cs).
+
+### Attributes
+
+#### `LengthAttribute`
+Sets the length of a corresponding column. Optional, defaults to 20.
+
+##### Constructor parameters
+`int length` - Length of the column.
+
+##### Example
+```csharp
+public class DummyClass
+{
+ [Length(20)]
+ public int DummyColumn { get; set; }
+}
+```
+
+#### `NameAttribute`
+Specifies the column name that will be displayed in the header of the result table. Required.
+
+##### Constructor parameters
+`string name` - Name of the column.
+
+##### Example
+```csharp
+public class DummyClass
+{
+ [Name("Average error")]
+ public int DummyColumn { get; set; }
+}
+```
+
+#### `OrderAttribute`
+Specifies the order of the column as seen in the results table. Optional. Columns without the attribute will be placed at the end of the table.
+
+##### Constructor parameters
+`int order` - Order of the column.
+
+##### Example
+```csharp
+public class DummyClass
+{
+ [Order(1)]
+ public int DummyColumn1 { get; set; }
+ 
+ [Order(2)]
+ public int DummyColumn2 { get; set; }
+}
+```
+
+#### `ShowAttribute`
+Specifies where should be the column shown. Optional, defaults to *everywhere*.
+
+The possibilities are:
+- Only in console output
+- Only in file output
+- Everywhere (default)
+- Nowhere
+
+##### Constructor parameters
+`ShowIn type` - Where should be the column shown.
+
+##### Example
+```csharp
+public class DummyClass
+{
+ [Show(ShowIn.Console)]
+ public int DummyColumn { get; set; }
+}
+```
+
+#### `ValueFormatAttribute`
+Specifies the format of values contained in the column. Optional, defaults to a call to `ToString` on the value.
+
+The format string is later used as follows: `string.Format(formatString, value);` See the [microsoft docs](https://msdn.microsoft.com/en-us/library/system.string.format(v=vs.110).aspx) for more information.
+ 
+##### Constructor parameters
+`string format` - Format of the value.
+
+##### Example
+```csharp
+public class DummyClass
+{
+ [ValueFormat("{0:N4} s")]
+ public double DummyColumn { get; set; }
+}
+```
