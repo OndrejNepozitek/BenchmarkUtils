@@ -18,6 +18,11 @@
 		/// <param name="name">Name of the column as displayed in the header.</param>
 		public NameAttribute(string name)
 		{
+			if (string.IsNullOrEmpty(name))
+			{
+				throw new ArgumentException("Name must not be null or empty.", nameof(name));
+			}
+
 			Name = name;
 		}
 	}

@@ -18,6 +18,11 @@
 		/// <param name="length">Length of the column.</param>
 		public LengthAttribute(int length)
 		{
+			if (length <= 0)
+			{
+				throw new ArgumentException("Length must be greater than 0.", nameof(length));
+			}
+
 			Length = length;
 		}
 	}

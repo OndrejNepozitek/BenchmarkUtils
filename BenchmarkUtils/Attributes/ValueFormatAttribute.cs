@@ -22,6 +22,11 @@
 		/// <param name="format">Format of the value.</param>
 		public ValueFormatAttribute(string format)
 		{
+			if (string.IsNullOrEmpty(format))
+			{
+				throw new ArgumentException("Format must not be null or empty.", nameof(format));
+			}
+
 			Format = format;
 		}
 	}
