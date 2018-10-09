@@ -121,7 +121,7 @@ public class BenchmarkJob : IBenchmarkJob<BenchmarkResult>
   {
     for (var i = 0; i < 10; i++)
     {
-      // use a given number of samples to estimate the value of pie
+      // use a given number of samples to estimate the value of pi
       // gather statistics about errors, best estimation and needed time
     }
 
