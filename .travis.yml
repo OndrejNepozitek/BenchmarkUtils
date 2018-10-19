@@ -1,0 +1,7 @@
+language: csharp
+mono: none
+dotnet: 2.1.403
+script:
+  - cd BenchmarkUtils
+  - dotnet restore
+  - dotnet build
