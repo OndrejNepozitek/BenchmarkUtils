@@ -19,6 +19,7 @@
 		protected bool WithConsole;
 		protected readonly List<FileOutput> FileOutputs = new List<FileOutput>();
 		protected TextWriter[] TextWritersArray;
+		protected bool CursorVisible;
 
 		/// <summary>
 		/// </summary>
@@ -90,6 +91,8 @@
 			{
 				TextWritersArray = new TextWriter[FileOutputs.Count + 1];
 				TextWritersArray[FileOutputs.Count] = Console.Out;
+				CursorVisible = Console.CursorVisible;
+				Console.CursorVisible = false;
 			}
 			else
 			{
@@ -119,6 +122,11 @@
 					continue;
 				
 				writer.Dispose();
+			}
+
+			if (WithConsole)
+			{
+				Console.CursorVisible = CursorVisible;
 			}
 		}
 
