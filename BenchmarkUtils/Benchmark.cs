@@ -153,7 +153,7 @@
 		/// <param name="job"></param>
 		protected virtual void Run(TJob job)
 		{
-			if (job is IPreviewableBenchmarkJob<TResult> previewableJob)
+			if (WithConsole && job is IPreviewableBenchmarkJob<TResult> previewableJob)
 			{
 				previewableJob.OnPreview += (previewResult) => BenchmarkTableOutput.PreviewRow(previewResult);
 			}

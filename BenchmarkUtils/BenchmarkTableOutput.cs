@@ -188,14 +188,17 @@
 		}
 
 		/// <summary>
-		/// Prints an intermediate result row to the console, overwriting the last intermediate row.
+		/// Prints an intermediate result row to the console, overwriting the row at the specified offset.
 		/// </summary>
-		/// <param name="result"></param>
-		public void PreviewRow(TResult result)
+		/// <param name="result">Result to be previewed.</param>
+		/// <param name="rowOffset">Offset relative to the current cursor position.</param>
+		public void PreviewRow(TResult result, int rowOffset = 0)
 		{
+			Console.SetCursorPosition(0, Console.CursorTop + rowOffset);
+
 			PrintRow(result, Console.Out);
 
-			Console.SetCursorPosition(0, Console.CursorTop - 1);
+			Console.SetCursorPosition(0, Console.CursorTop - rowOffset - 1);
 		}
 
 		/// <summary>
