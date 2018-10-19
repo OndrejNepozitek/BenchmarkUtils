@@ -1,29 +1,22 @@
 # Benchmark utilities
+[![TravisCI](https://api.travis-ci.org/OndrejNepozitek/BenchmarkUtils.svg?branch=master)](https://travis-ci.org/OndrejNepozitek/BenchmarkUtils)
+[![NuGet](https://img.shields.io/nuget/v/BenchmarkUtils.svg)](https://www.nuget.org/packages/BenchmarkUtils)
 
 A simple .NET utility to benchmark the performance of (often stochastic) algorithms. The typical usage is to benchmark various configurations of a stochastic algorithm and compare how they perform both result-wise and speed-wise. **It is not meant to perform microbenchmarks.** 
 
+<p align="center">
+  <img src="http://git.n0pe.eu/BenchmarkUtils_example.gif" alt="Example output" width="800" height="212">
+</p>
+
+<p align="center">
+  <i>Example of how the number of samples affects the accuracy of Monte Carlo PI estimation</i>
+</p>
 
 ## Table of contents
-- [Example output](#example-output)
 - [Features](#features)
 - [How to install](#how-to-install)
 - [Example setup - PI estimation](#example-setup---pi-estimation)
 - [API reference](#api-reference)
-
-## Example output
-
-```
- << Monte Carlo PI estimation, 10 runs for each configuration >>
----------------------------------------------------------------------------------------------------------------
- Name                    | Best estimation   | Error min              | Error median           | Avg time     |
----------------------------------------------------------------------------------------------------------------
- 50 samples                3.12                0.021592653589793        0.138407346410207        0.0000 s     
- 500 samples               3.144               0.00240734641020701      0.026407346410207        0.0000 s     
- 5000 samples              3.1424              0.000807346410206744     0.025592653589793        0.0004 s     
- 50000 samples             3.14128             0.000312653589793044     0.00583265358979324      0.0099 s     
- 500000 samples            3.141936            0.000343346410206724     0.00175265358979315      0.0702 s     
- 5000000 samples           3.1415536           3.90535897931699E-05     0.000681746410206685     0.6490 s     
-```
 
 ## Features
 
@@ -40,8 +33,8 @@ A simple .NET utility to benchmark the performance of (often stochastic) algorit
 - Whether to show the column in console/file/everywhere
 
 ## How to install
-- include the BenchmarkUtils.dll (.NET Standard 2.0 dll) to your project
-- use the `BenchmarkUtils` namespace
+- Download the latest release via [Nuget](https://www.nuget.org/packages/BenchmarkUtils) or from [Github](https://github.com/OndrejNepozitek/BenchmarkUtils/releases/latest)
+- Use the `BenchmarkUtils` namespace
 
 ## Example setup - PI estimation
 We will demonstrate how to use the library on a simple example of a [monte carlo algorithm that estimates the value of pi](https://www.geeksforgeeks.org/estimating-value-pi-using-monte-carlo/). The goal is to compare how the error of the estimation depends on the number of sampled points. Because the algorithm is stochastic, we will run the benchmark ten times for each configuration (i.e. number of samples) and compute the median of errors.
