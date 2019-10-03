@@ -135,23 +135,28 @@
 		/// </summary>
 		/// <param name="jobs">Jobs to be benchmarked.</param>
 		/// <param name="name">Optional name of the benchmark.</param>
-		public virtual void Run(TJob[] jobs, string name = null)
+		public virtual List<TResult> Run(TJob[] jobs, string name = null)
 		{
+            var results = new List<TResult>();
+
 			BenchmarkStarted(name);
 
 			foreach (var job in jobs)
 			{
-				Run(job);
+				var result = Run(job);
+                results.Add(result);
 			}
 
 			BenchmarkEnded();
-		}
+
+            return results;
+        }
 
 		/// <summary>
 		/// Benchmarks a given job.
 		/// </summary>
 		/// <param name="job"></param>
-		protected virtual void Run(TJob job)
+		protected virtual TResult Run(TJob job)
 		{
 			if (WithConsole && job is IPreviewableBenchmarkJob<TResult> previewableJob)
 			{
@@ -166,7 +171,9 @@
 			{
 				textWriter.Flush();
 			}
-		}
+
+            return result;
+        }
 
 		protected class FileOutput
 		{

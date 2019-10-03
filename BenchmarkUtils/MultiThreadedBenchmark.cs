@@ -1,4 +1,7 @@
-﻿namespace BenchmarkUtils
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace BenchmarkUtils
 {
 	using System;
 	using System.Threading.Tasks;
@@ -24,7 +27,7 @@
 		/// </remarks>
 		/// <param name="jobs">Jobs to be benchmarked.</param>
 		/// <param name="name">Optional name of the benchmark.</param>
-		public override void Run(TJob[] jobs, string name = null)
+		public override List<TResult> Run(TJob[] jobs, string name = null)
 		{
 			BenchmarkStarted(name);
 
@@ -60,7 +63,9 @@
 			}
 
 			BenchmarkEnded();
-		}
+
+            return Results.ToList();
+        }
 
 		protected Task Run(TJob job, int index)
 		{

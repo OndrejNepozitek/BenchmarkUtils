@@ -26,7 +26,7 @@
 				new BenchmarkJob(benchmarksCount, 10000000),
 			};
 
-			benchmark.Run(jobs, "PI estimation");
+			var results = benchmark.Run(jobs, "PI estimation");
 		}
 	}
 }
