@@ -34,7 +34,7 @@ namespace BenchmarkUtils
 			Results = new TResult[jobs.Length];
 			var tasks = new Task[jobs.Length];
 
-			if (WithConsole)
+			if (WithConsole && WithConsolePreview)
 			{
 				for (var i = 0; i < jobs.Length; i++)
 				{
@@ -69,7 +69,7 @@ namespace BenchmarkUtils
 
 		protected Task Run(TJob job, int index)
 		{
-			if (WithConsole && job is IPreviewableBenchmarkJob<TResult> previewableJob)
+			if (WithConsole && WithConsolePreview && job is IPreviewableBenchmarkJob<TResult> previewableJob)
 			{
 				previewableJob.OnPreview += (previewResult) =>
 				{
@@ -84,10 +84,13 @@ namespace BenchmarkUtils
 			{
 				var result = job.Execute();
 
-				lock (BenchmarkTableOutput)
-				{
-					BenchmarkTableOutput.PreviewRow(result, index);
-				}
+                if (WithConsole && WithConsolePreview)
+                {
+                    lock (BenchmarkTableOutput)
+                    {
+                        BenchmarkTableOutput.PreviewRow(result, index);
+                    }
+                }
 
 				lock (Results)
 				{

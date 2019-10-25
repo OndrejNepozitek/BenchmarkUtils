@@ -17,17 +17,20 @@
 		protected BenchmarkTableOutput<TResult> BenchmarkTableOutput = new BenchmarkTableOutput<TResult>();
 
 		protected bool WithConsole;
+        protected bool WithConsolePreview;
 		protected readonly List<FileOutput> FileOutputs = new List<FileOutput>();
 		protected TextWriter[] TextWritersArray;
 		protected bool CursorVisible;
 
-		/// <summary>
-		/// </summary>
-		/// <param name="enableConsoleOutput">Whether console output should be enabled.</param>
-		public Benchmark(bool enableConsoleOutput = true)
+        /// <summary>
+        /// </summary>
+        /// <param name="enableConsoleOutput">Whether console output should be enabled.</param>
+        /// <param name="enableConsolePreview">Whether console output should be updated after every intermediate result</param>
+        public Benchmark(bool enableConsoleOutput = true, bool enableConsolePreview = true)
 		{
 			WithConsole = enableConsoleOutput;
-		}
+            WithConsolePreview = enableConsolePreview;
+        }
 
 		/// <summary>
 		/// Adds file output to the benchmark.
@@ -73,14 +76,16 @@
 			FileOutputs.Add(fileOutput);
 		}
 
-		/// <summary>
-		/// Enables or disables console output.
-		/// </summary>
-		/// <param name="enable"></param>
-		public void SetConsoleOutput(bool enable)
+        /// <summary>
+        /// Enables or disables console output.
+        /// </summary>
+        /// <param name="enable"></param>
+        /// <param name="enablePreview"></param>
+        public void SetConsoleOutput(bool enable, bool enablePreview)
 		{
 			WithConsole = enable;
-		}
+            WithConsolePreview = enablePreview;
+        }
 
 		/// <summary>
 		/// Called before a benchmark starts. Setups the benchmark.
@@ -91,9 +96,13 @@
 			{
 				TextWritersArray = new TextWriter[FileOutputs.Count + 1];
 				TextWritersArray[FileOutputs.Count] = Console.Out;
-				CursorVisible = Console.CursorVisible;
-				Console.CursorVisible = false;
-			}
+
+                if (WithConsolePreview)
+                {
+                    CursorVisible = Console.CursorVisible;
+                    Console.CursorVisible = false;
+                }
+            }
 			else
 			{
 				TextWritersArray = new TextWriter[FileOutputs.Count];
@@ -124,7 +133,7 @@
 				writer.Dispose();
 			}
 
-			if (WithConsole)
+			if (WithConsole && WithConsolePreview)
 			{
 				Console.CursorVisible = CursorVisible;
 			}
@@ -158,7 +167,7 @@
 		/// <param name="job"></param>
 		protected virtual TResult Run(TJob job)
 		{
-			if (WithConsole && job is IPreviewableBenchmarkJob<TResult> previewableJob)
+			if (WithConsole && WithConsolePreview && job is IPreviewableBenchmarkJob<TResult> previewableJob)
 			{
 				previewableJob.OnPreview += (previewResult) => BenchmarkTableOutput.PreviewRow(previewResult);
 			}
