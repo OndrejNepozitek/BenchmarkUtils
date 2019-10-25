@@ -1,15 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Ondřej Nepožitek</Authors>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <PackageLicenseUrl>https://raw.githubusercontent.com/OndrejNepozitek/BenchmarkUtils/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/OndrejNepozitek/BenchmarkUtils</RepositoryUrl>
     <Description>A simple .NET utility to benchmark the performance of (often stochastic) algorithms. The typical usage is to benchmark various configurations of a stochastic algorithm and compare how they perform both result-wise and speed-wise. It is not meant to perform microbenchmarks.</Description>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <AssemblyVersion>1.2.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
