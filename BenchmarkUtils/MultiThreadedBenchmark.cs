@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BenchmarkUtils
@@ -16,8 +17,13 @@ namespace BenchmarkUtils
 	/// <typeparam name="TResult"></typeparam>
 	public class MultiThreadedBenchmark<TJob, TResult> : Benchmark<TJob, TResult> 
 		where TJob : IBenchmarkJob<TResult>
-	{
-		protected TResult[] Results;
+    {
+        private readonly int maxDegreeOfParallelism;
+
+        public MultiThreadedBenchmark(int maxDegreeOfParallelism = 10)
+        {
+            this.maxDegreeOfParallelism = maxDegreeOfParallelism;
+        }
 
 		/// <summary>
 		/// Executes a benchmark of given jobs with a given name.
@@ -31,7 +37,7 @@ namespace BenchmarkUtils
 		{
 			BenchmarkStarted(name);
 
-			Results = new TResult[jobs.Length];
+			var results = new TResult[jobs.Length];
 			var tasks = new Task[jobs.Length];
 
 			if (WithConsole && WithConsolePreview)
@@ -44,15 +50,19 @@ namespace BenchmarkUtils
 				Console.SetCursorPosition(0, Console.CursorTop - jobs.Length);
 			}
 
-			for (var i = 0; i < jobs.Length; i++)
-			{
-				var task = Run(jobs[i], i);
-				tasks[i] = task;
-			}
+            var dummyArray = new int[jobs.Length];
+            var partitioner = Partitioner.Create(dummyArray, EnumerablePartitionerOptions.NoBuffering);
+            Parallel.ForEach(partitioner, new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism }, (input, state, i) =>
+            {
+				var result = Run(jobs[i], (int) i);
 
-			Task.WaitAll(tasks);
+                lock (results)
+                {
+                    results[i] = result;
+                }
+            });
 
-			foreach (var result in Results)
+			foreach (var result in results)
 			{
 				BenchmarkTableOutput.PrintRow(result, TextWritersArray);
 			}
@@ -64,10 +74,10 @@ namespace BenchmarkUtils
 
 			BenchmarkEnded();
 
-            return Results.ToList();
+            return results.ToList();
         }
 
-		protected Task Run(TJob job, int index)
+		protected TResult Run(TJob job, int index)
 		{
 			if (WithConsole && WithConsolePreview && job is IPreviewableBenchmarkJob<TResult> previewableJob)
 			{
@@ -80,23 +90,17 @@ namespace BenchmarkUtils
 				};
 			}
 
-			return Task.Run(() =>
-			{
-				var result = job.Execute();
+            var result = job.Execute();
 
-                if (WithConsole && WithConsolePreview)
+            if (WithConsole && WithConsolePreview)
+            {
+                lock (BenchmarkTableOutput)
                 {
-                    lock (BenchmarkTableOutput)
-                    {
-                        BenchmarkTableOutput.PreviewRow(result, index);
-                    }
+                    BenchmarkTableOutput.PreviewRow(result, index);
                 }
+            }
 
-				lock (Results)
-				{
-					Results[index] = result;
-				}
-			});
-		}
+            return result;
+        }
 	}
 }

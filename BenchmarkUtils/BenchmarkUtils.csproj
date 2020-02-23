@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Ondřej Nepožitek</Authors>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
     <PackageLicenseUrl>https://raw.githubusercontent.com/OndrejNepozitek/BenchmarkUtils/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/OndrejNepozitek/BenchmarkUtils</RepositoryUrl>
     <Description>A simple .NET utility to benchmark the performance of (often stochastic) algorithms. The typical usage is to benchmark various configurations of a stochastic algorithm and compare how they perform both result-wise and speed-wise. It is not meant to perform microbenchmarks.</Description>
